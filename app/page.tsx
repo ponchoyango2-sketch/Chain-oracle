@@ -13,7 +13,7 @@ import { formatUnits } from "viem";
 
 const TOKEN_ADDRESS = "0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D";
 const TOKEN_DECIMALS = 18;
-const MIN_TOKENS = BigInt(1);
+const MIN_TOKENS = 1;
 
 const BUY_URL = https://app.uniswap.org/#/swap?chain=base&outputCurrency=${TOKEN_ADDRESS};
 const DEX_URL = https://dexscreener.com/base?q=${TOKEN_ADDRESS};
@@ -44,7 +44,7 @@ export default function Home() {
     query: { enabled: Boolean(address), refetchInterval: 10_000 },
   });
 
-  const minRaw = MIN_TOKENS * (BigInt(10) ** BigInt(TOKEN_DECIMALS));
+  const minRaw = MIN_TOKENS * Math.pow(10, TOKEN_DECIMALS);
   const hasToken = true;
   const balHuman =
     typeof balance === "bigint" ? formatUnits(balance, TOKEN_DECIMALS) : "0";
