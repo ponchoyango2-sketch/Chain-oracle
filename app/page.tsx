@@ -246,7 +246,7 @@ export default function Home() {
           Esta app solo lee tu balance del token (no pide permisos raros).
         </p>
         <p style={{ fontSize: 12, opacity: 0.7, textAlign: "center", marginTop: 10 }}>
-  Creado por Alfonso Medina
+  © 2026 Alfonso Medina — Chain Oracle
 </p>
       </div>
     </main>
