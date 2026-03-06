@@ -2,70 +2,30 @@
 
 import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import {
-  useAccount,
-  useReadContract,
-  useChainId,
-  useSwitchChain,
-} from "wagmi";
-import { base } from "wagmi/chains";
-import { formatUnits } from "viem";
-
-const TOKEN_ADDRESS = "0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D";
-const TOKEN_DECIMALS = 18;
-const MIN_TOKENS = 1;
-
-const BUY_URL = `https://app.uniswap.org/#/swap?chain=base&outputCurrency=${TOKEN_ADDRESS}`;
-const DEX_URL = `https://dexscreener.com/base?q=${TOKEN_ADDRESS}`;
-
-const ERC20_ABI = [
-  {
-    type: "function",
-    name: "balanceOf",
-    stateMutability: "view",
-    inputs: [{ name: "account", type: "address" }],
-    outputs: [{ name: "", type: "uint256" }],
-  },
-] as const;
 
 export default function Home() {
   const [crypto, setCrypto] = useState("ETH");
   const [result, setResult] = useState("");
-
-  const { address, isConnected } = useAccount();
-  const chainId = useChainId();
-  const { switchChain } = useSwitchChain();
-
-  const { data: balance } = useReadContract({
-    address: TOKEN_ADDRESS as `0x${string}`,
-    abi: ERC20_ABI,
-    functionName: "balanceOf",
-    args: [address ?? "0x0000000000000000000000000000000000000000"],
-    query: { enabled: Boolean(address), refetchInterval: 10_000 },
-  });
-
-  const minRaw = MIN_TOKENS * Math.pow(10, TOKEN_DECIMALS);
-  const hasToken = true;
-  const balHuman =
-    typeof balance === "bigint" ? formatUnits(balance, TOKEN_DECIMALS) : "0";
-
-  const wrongNetwork = isConnected && chainId !== base.id;
+  const [loading, setLoading] = useState(false);
 
   async function doPredict() {
     try {
-      setResult("Cargando...");
+      setLoading(true);
+      setResult("Consultando el oráculo...");
       const q = crypto.trim();
-      const res = await fetch(`/api/predict?q=${encodeURIComponent(q)}`);
+      const res = await fetch(/api/predict?q=${encodeURIComponent(q)});
       const data = await res.json();
 
       if (!res.ok) {
-        setResult(data?.error || "Error");
+        setResult(data?.error || "Error al consultar");
         return;
       }
 
       setResult(data?.prediction || "Sin respuesta");
     } catch (e: any) {
       setResult(e?.message || "Error");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -73,181 +33,319 @@ export default function Home() {
     <main
       style={{
         minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-        background: "radial-gradient(circle at 20% 20%, #1d5f3b, #0b0f12)",
+        padding: "32px 20px",
+        background:
+          "radial-gradient(circle at top, rgba(30,120,80,0.35), transparent 30%), linear-gradient(180deg, #07110d 0%, #0b1410 45%, #050806 100%)",
         color: "white",
-        fontFamily: "system-ui, Arial",
+        fontFamily:
+          'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       }}
     >
-      <div style={{ width: 520, maxWidth: "100%" }}>
-        <h1 style={{ margin: 0, fontSize: 40, textAlign: "center" }}>
-          Oráculo de cadenas
-        </h1>
-
-        <p style={{ marginTop: 8, opacity: 0.8, textAlign: "center" }}>
-          Predicciones + Ruleta (Base)
-        </p>
-
-        <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
-          <ConnectButton />
-        </div>
-
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div
           style={{
-            marginTop: 18,
-            padding: 14,
-            borderRadius: 14,
-            border: "1px solid rgba(255,255,255,.12)",
-            background: "rgba(255,255,255,.05)",
             display: "flex",
             justifyContent: "space-between",
-            gap: 12,
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 28,
+            flexWrap: "wrap",
           }}
         >
           <div>
-            <div style={{ fontSize: 12, opacity: 0.75 }}>Red</div>
-            <div style={{ fontWeight: 700 }}>{base.name}</div>
+            <div
+              style={{
+                display: "inline-block",
+                padding: "6px 12px",
+                borderRadius: 999,
+                background: "rgba(80,255,170,0.12)",
+                border: "1px solid rgba(80,255,170,0.22)",
+                color: "#8affc1",
+                fontSize: 12,
+                fontWeight: 700,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                marginBottom: 12,
+              }}
+            >
+              Live on Base
+            </div>
+
+            <h1
+              style={{
+                margin: 0,
+                fontSize: "clamp(38px, 7vw, 72px)",
+                lineHeight: 1,
+                fontWeight: 900,
+                letterSpacing: -2,
+              }}
+            >
+              Chain Oracle
+            </h1>
+
+            <p
+              style={{
+                marginTop: 14,
+                marginBottom: 0,
+                maxWidth: 650,
+                fontSize: 18,
+                lineHeight: 1.5,
+                color: "rgba(255,255,255,0.78)",
+              }}
+            >
+              Predicciones Web3 con una fachada premium.
+            </p>
           </div>
 
-          <div style={{ textAlign: "right" }}>
-            <div style={{ fontSize: 12, opacity: 0.75 }}>Balance token</div>
-            <div style={{ fontWeight: 700 }}>{balHuman}</div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <ConnectButton />
           </div>
         </div>
 
-        {wrongNetwork && (
-          <div
-            style={{
-              marginTop: 12,
-              padding: 12,
-              borderRadius: 12,
-              background: "rgba(255,120,120,.12)",
-              border: "1px solid rgba(255,120,120,.25)",
-            }}
-          >
-            Estás en otra red.
-            <button
-              onClick={() => switchChain({ chainId: base.id })}
-              style={{
-                marginLeft: 8,
-                padding: "8px 10px",
-                borderRadius: 10,
-                border: "1px solid rgba(255,255,255,.2)",
-                background: "rgba(255,255,255,.06)",
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
-              Cambiar a Base
-            </button>
-          </div>
-        )}
-
         <div
           style={{
-            marginTop: 14,
-            padding: 16,
-            borderRadius: 16,
-            border: "1px solid rgba(255,255,255,.12)",
-            background: "rgba(0,0,0,.15)",
+            display: "grid",
+            gridTemplateColumns: "1.2fr 0.8fr",
+            gap: 22,
           }}
         >
-          {hasToken ? (
-            <>
-              <div style={{ fontWeight: 800, color: "#8affb3" }}>
-                ✅ Acceso desbloqueado
-              </div>
+          <section
+            style={{
+              position: "relative",
+              overflow: "hidden",
+              borderRadius: 28,
+              border: "1px solid rgba(255,255,255,0.10)",
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))",
+              boxShadow: "0 25px 80px rgba(0,0,0,0.35)",
+              backdropFilter: "blur(14px)",
+              padding: 26,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                marginBottom: 18,
+              }}
+            >
+              <div
+                style={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: "50%",
+                  background: "#63ffb2",
+                  boxShadow: "0 0 16px rgba(99,255,178,0.7)",
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 13,
+                  color: "#9bffd0",
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  fontWeight: 700,
+                }}
+              >
+                Oráculo activo
+              </span>
+            </div>
 
-              <div style={{ opacity: 0.8, marginTop: 6 }}>
-                Bienvenido holder. Predicciones activas.
-              </div>
+            <h2
+              style={{
+                margin: 0,
+                fontSize: 28,
+                lineHeight: 1.1,
+                fontWeight: 800,
+              }}
+            >
+              Consulta una predicción
+            </h2>
 
-              <div style={{ marginTop: 14, display: "flex", gap: 10 }}>
-                <input
-                  value={crypto}
-                  onChange={(e) => setCrypto(e.target.value)}
-                  placeholder="BTC / ETH / SOL / BASE o contrato 0x..."
-                  style={{
-                    flex: 1,
-                    padding: 12,
-                    borderRadius: 10,
-                    border: "1px solid rgba(255,255,255,.18)",
-                    background: "rgba(255,255,255,.06)",
-                    color: "white",
-                    outline: "none",
-                  }}
-                />
+            <p
+              style={{
+                marginTop: 10,
+                marginBottom: 22,
+                color: "rgba(255,255,255,0.72)",
+                lineHeight: 1.6,
+              }}
+            >
+              Escribe un ticker como BTC, ETH, SOL o BASE y obtén una respuesta instantánea.
+            </p>
 
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
+              {["BTC", "ETH", "SOL", "BASE"].map((item) => (
                 <button
-                  onClick={doPredict}
+                  key={item}
+                  onClick={() => setCrypto(item)}
                   style={{
-                    padding: "12px 14px",
-                    borderRadius: 10,
-                    border: "1px solid rgba(100,255,160,.25)",
-                    background: "rgba(100,255,160,.16)",
+                    padding: "10px 14px",
+                    borderRadius: 12,
+                    border:
+                      crypto === item
+                        ? "1px solid rgba(80,255,170,0.45)"
+                        : "1px solid rgba(255,255,255,0.10)",
+                    background:
+                      crypto === item
+                        ? "rgba(80,255,170,0.14)"
+                        : "rgba(255,255,255,0.04)",
                     color: "white",
                     cursor: "pointer",
-                    fontWeight: 800,
+                    fontWeight: 700,
                   }}
                 >
-                  🔮 Predecir
+                  {item}
                 </button>
+              ))}
+            </div>
+
+            <div
+              style={{
+                marginTop: 18,
+                display: "flex",
+                gap: 12,
+                flexWrap: "wrap",
+              }}
+            >
+              <input
+                value={crypto}
+                onChange={(e) => setCrypto(e.target.value)}
+                placeholder="BTC / ETH / SOL / BASE"
+                style={{
+                  flex: 1,
+                  minWidth: 220,
+                  padding: "16px 18px",
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,255,255,0.14)",
+                  background: "rgba(255,255,255,0.05)",
+                  color: "white",
+                  outline: "none",
+                  fontSize: 16,
+                }}
+              />
+
+              <button
+                onClick={doPredict}
+                disabled={loading}
+                style={{
+                  padding: "16px 22px",
+                  borderRadius: 16,
+                  border: "1px solid rgba(80,255,170,0.35)",
+                  background: "linear-gradient(180deg, #27d17f, #159a5d)",
+                  color: "white",
+                  cursor: "pointer",
+                  fontWeight: 800,
+                  fontSize: 16,
+                  boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
+                }}
+              >
+                {loading ? "Consultando..." : "🔮 Predecir"}
+              </button>
+            </div>
+
+            <div
+              style={{
+                marginTop: 18,
+                padding: 18,
+                borderRadius: 18,
+                border: "1px solid rgba(255,255,255,0.10)",
+                background: "rgba(255,255,255,0.04)",
+                minHeight: 90,
+                color: "rgba(255,255,255,0.9)",
+                lineHeight: 1.6,
+              }}
+            >
+              {result || "Aquí aparecerá la respuesta del oráculo."}
+            </div>
+          </section>
+
+          <aside
+            style={{
+              borderRadius: 28,
+              border: "1px solid rgba(255,255,255,0.10)",
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))",
+              boxShadow: "0 25px 80px rgba(0,0,0,0.35)",
+              backdropFilter: "blur(14px)",
+              padding: 26,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 12,
+                color: "#9bffd0",
+                textTransform: "uppercase",
+                letterSpacing: 1,
+                fontWeight: 700,
+                marginBottom: 16,
+              }}
+            >
+              Estado del proyecto
+            </div>
+
+            <div style={{ display: "grid", gap: 14 }}>
+              <div
+                style={{
+                  padding: 16,
+                  borderRadius: 18,
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <div style={{ opacity: 0.7, fontSize: 13 }}>Red</div>
+                <div style={{ marginTop: 6, fontSize: 22, fontWeight: 800 }}>
+                  Base
+                </div>
               </div>
 
               <div
                 style={{
-                  marginTop: 12,
-                  padding: 12,
-                  borderRadius: 12,
-                  border: "1px solid rgba(255,255,255,.12)",
-                  background: "rgba(255,255,255,.04)",
-                  whiteSpace: "pre-wrap",
-                  minHeight: 52,
+                  padding: 16,
+                  borderRadius: 18,
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
                 }}
               >
-                {result || "Escribe una cripto y dale Predecir."}
+                <div style={{ opacity: 0.7, fontSize: 13 }}>Estado</div>
+                <div style={{ marginTop: 6, fontSize: 22, fontWeight: 800 }}>
+                  En línea
+                </div>
               </div>
 
-              <div style={{ marginTop: 10, display: "flex", gap: 10 }}>
-                <a
-                  href={BUY_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: "#8affb3", textDecoration: "underline" }}
-                >
-                  Comprar token (Uniswap)
-                </a>
+              <div
+                style={{
+                  padding: 16,
+                  borderRadius: 18,
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <div style={{ opacity: 0.7, fontSize: 13 }}>Acceso</div>
+                <div style={{ marginTop: 6, fontSize: 22, fontWeight: 800 }}>
+                  Premium
+                </div>
+              </div>
+            </div>
 
-                <a
-                  href={DEX_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ color: "#8affb3", textDecoration: "underline" }}
-                >
-                  Ver en Dexscreener
-                </a>
-              </div>
-            </>
-          ) : (
-            <>
-              <div style={{ fontWeight: 800 }}>🔒 Acceso bloqueado</div>
-              <div style={{ opacity: 0.8, marginTop: 6 }}>
-                Necesitas al menos {String(MIN_TOKENS)} token para activar
-                predicciones.
-              </div>
-            </>
-          )}
+            <p
+              style={{
+                fontSize: 13,
+                opacity: 0.7,
+                marginTop: 18,
+                lineHeight: 1.6,
+              }}
+            >
+              Creado por Alfonso Medina
+            </p>
+          </aside>
         </div>
-
-        <p style={{ fontSize: 12, opacity: 0.6, textAlign: "center" }}>
-          Esta app solo lee tu balance del token (no pide permisos raros).
-        </p>
-        <p style={{ fontSize: 12, opacity: 0.7, textAlign: "center", marginTop: 10 }}>
-  © 2026 Alfonso Medina — Chain Oracle
-</p>
       </div>
     </main>
   );
