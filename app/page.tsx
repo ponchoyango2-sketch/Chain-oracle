@@ -245,6 +245,9 @@ export default function Home() {
         <p style={{ fontSize: 12, opacity: 0.6, textAlign: "center" }}>
           Esta app solo lee tu balance del token (no pide permisos raros).
         </p>
+        <p style={{ fontSize: 12, opacity: 0.7, textAlign: "center", marginTop: 10 }}>
+  Creado por Alfonso Medina
+</p>
       </div>
     </main>
   );
