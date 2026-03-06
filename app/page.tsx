@@ -55,7 +55,7 @@ export default function Home() {
     try {
       setResult("Cargando...");
       const q = crypto.trim();
-      const res = await fetch(/api/predict?q=${encodeURIComponent(q)});
+      const res = await fetch(`/api/predict?q=${encodeURIComponent(q)}`);
       const data = await res.json();
 
       if (!res.ok) {
