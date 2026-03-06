@@ -54,7 +54,7 @@ export default function Home() {
   });
 
   const minRaw = MIN_TOKENS * (BigInt(10) ** BigInt(TOKEN_DECIMALS));
-  const hasToken = typeof balance === "bigint" && balance >= minRaw;
+  const hasToken = true;
   const balHuman =
     typeof balance === "bigint" ? formatUnits(balance, TOKEN_DECIMALS) : "0";
 
@@ -70,7 +70,7 @@ export default function Home() {
         setResult(data?.error || "Error");
         return;
       }
-      setResult(data?.text || "Sin respuesta");
+      setResult(data?.prediction || "Sin respuesta");
     } catch (e: any) {
       setResult(e?.message || "Error");
     }
