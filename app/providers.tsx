@@ -9,7 +9,7 @@ import { base } from "wagmi/chains";
 
 const config = getDefaultConfig({
   appName: "Chain Oracle",
-  projectId: "demo", // luego lo cambiamos por uno real
+  projectId: "demo",
   chains: [base],
   ssr: true,
 });
