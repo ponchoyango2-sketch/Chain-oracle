@@ -15,8 +15,8 @@ const TOKEN_ADDRESS = "0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D";
 const TOKEN_DECIMALS = 18;
 const MIN_TOKENS = 1;
 
-const BUY_URL = https://app.uniswap.org/#/swap?chain=base&outputCurrency=${TOKEN_ADDRESS};
-const DEX_URL = https://dexscreener.com/base?q=${TOKEN_ADDRESS};
+const BUY_URL = `https://app.uniswap.org/#/swap?chain=base&outputCurrency=${TOKEN_ADDRESS}`;
+const DEX_URL = `https://dexscreener.com/base?q=${TOKEN_ADDRESS}`;
 
 const ERC20_ABI = [
   {
