@@ -1,6 +1,7 @@
          "use client";
 
 import { useState } from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   useAccount,
   useConnect,
@@ -97,42 +98,12 @@ export default function Home() {
           Predicciones + Ruleta (Base)
         </p>
 
-        <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
-          {!isConnected ? (
-            <>
-              {connectors.map((c) => (
-                <button
-                  key={c.uid}
-                  disabled={isPending}
-                  onClick={() => connect({ connector: c })}
-                  style={{
-                    padding: "10px 14px",
-                    borderRadius: 10,
-                    border: "1px solid rgba(255,255,255,.2)",
-                    background: "rgba(255,255,255,.06)",
-                    color: "white",
-                    cursor: "pointer",
-                  }}
-                >
-                  Conectar {c.name}
-                </button>
-              ))}
-            </>
-          ) : (
-            <button
-              onClick={() => disconnect()}
-              style={{
-                padding: "10px 14px",
-                borderRadius: 10,
-                border: "1px solid rgba(255,255,255,.2)",
-                background: "rgba(255,255,255,.06)",
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
-              Desconectar {address?.slice(0, 6)}...{address?.slice(-4)}
-            </button>
-          )}
+       
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <ConnectButton />
+        </div>
+                  
+              
         </div>
 
         <div
