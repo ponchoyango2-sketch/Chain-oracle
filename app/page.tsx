@@ -37,7 +37,7 @@ export default function Home() {
   const { switchChain } = useSwitchChain();
 
   const { data: balance } = useReadContract({
-    address: TOKEN_ADDRESS as 0x${string},
+    address: TOKEN_ADDRESS as `0x${string}`,
     abi: ERC20_ABI,
     functionName: "balanceOf",
     args: [address ?? "0x0000000000000000000000000000000000000000"],
