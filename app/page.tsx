@@ -1,11 +1,9 @@
-         "use client";
+"use client";
 
 import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   useAccount,
-  useConnect,
-  useDisconnect,
   useReadContract,
   useChainId,
   useSwitchChain,
@@ -15,12 +13,10 @@ import { formatUnits } from "viem";
 
 const TOKEN_ADDRESS = "0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D";
 const TOKEN_DECIMALS = 18;
-
-// OJO: sin 1n ni 10n para que no joda TS/ES2020
 const MIN_TOKENS = BigInt(1);
 
-const BUY_URL =`https://app.uniswap.org/#/swap?chain=base&outputCurrency=${TOKEN_ADDRESS}`;
-const DEX_URL =`https://dexscreener.com/base?q=${TOKEN_ADDRESS}`;
+const BUY_URL = https://app.uniswap.org/#/swap?chain=base&outputCurrency=${TOKEN_ADDRESS};
+const DEX_URL = https://dexscreener.com/base?q=${TOKEN_ADDRESS};
 
 const ERC20_ABI = [
   {
@@ -36,18 +32,12 @@ export default function Home() {
   const [crypto, setCrypto] = useState("ETH");
   const [result, setResult] = useState<string>("");
 
-  // Wallet
   const { address, isConnected } = useAccount();
-  const { connect, connectors, isPending } = useConnect();
-  const { disconnect } = useDisconnect();
-
-  // Network
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
 
-  // Token balance
   const { data: balance } = useReadContract({
-    address: TOKEN_ADDRESS as `0x${string}`,
+    address: TOKEN_ADDRESS as 0x${string},
     abi: ERC20_ABI,
     functionName: "balanceOf",
     args: [address ?? "0x0000000000000000000000000000000000000000"],
@@ -65,12 +55,14 @@ export default function Home() {
     try {
       setResult("Cargando...");
       const q = crypto.trim();
-      const res = await fetch(`/api/predict?q=${encodeURIComponent(q)}`);
+      const res = await fetch(/api/predict?q=${encodeURIComponent(q)});
       const data = await res.json();
+
       if (!res.ok) {
         setResult(data?.error || "Error");
         return;
       }
+
       setResult(data?.prediction || "Sin respuesta");
     } catch (e: any) {
       setResult(e?.message || "Error");
@@ -94,16 +86,13 @@ export default function Home() {
         <h1 style={{ margin: 0, fontSize: 40, textAlign: "center" }}>
           Oráculo de cadenas
         </h1>
+
         <p style={{ marginTop: 8, opacity: 0.8, textAlign: "center" }}>
           Predicciones + Ruleta (Base)
         </p>
 
-       
         <div style={{ display: "flex", justifyContent: "center" }}>
           <ConnectButton />
-        </div>
-                  
-              
         </div>
 
         <div
@@ -171,6 +160,7 @@ export default function Home() {
               <div style={{ fontWeight: 800, color: "#8affb3" }}>
                 ✅ Acceso desbloqueado
               </div>
+
               <div style={{ opacity: 0.8, marginTop: 6 }}>
                 Bienvenido holder. Predicciones activas.
               </div>
@@ -190,6 +180,7 @@ export default function Home() {
                     outline: "none",
                   }}
                 />
+
                 <button
                   onClick={doPredict}
                   style={{
@@ -224,13 +215,16 @@ export default function Home() {
                 <a
                   href={BUY_URL}
                   target="_blank"
+                  rel="noreferrer"
                   style={{ color: "#8affb3", textDecoration: "underline" }}
                 >
                   Comprar token (Uniswap)
                 </a>
+
                 <a
                   href={DEX_URL}
                   target="_blank"
+                  rel="noreferrer"
                   style={{ color: "#8affb3", textDecoration: "underline" }}
                 >
                   Ver en Dexscreener
