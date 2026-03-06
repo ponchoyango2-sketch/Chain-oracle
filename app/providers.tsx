@@ -17,7 +17,7 @@ const config = getDefaultConfig({
   appName: "Chain Oracle",
   projectId: "c72acb0517b84dde28476773e31de1da",
   chains: [base],
-  ssr: false,
+  ssr: false, // ESTA LINEA ES LA CLAVE
 });
 
 const queryClient = new QueryClient();
