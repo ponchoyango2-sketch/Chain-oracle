@@ -30,7 +30,7 @@ const ERC20_ABI = [
 
 export default function Home() {
   const [crypto, setCrypto] = useState("ETH");
-  const [result, setResult] = useState<string>("");
+  const [result, setResult] = useState("");
 
   const { address, isConnected } = useAccount();
   const chainId = useChainId();
@@ -91,7 +91,7 @@ export default function Home() {
           Predicciones + Ruleta (Base)
         </p>
 
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 12 }}>
           <ConnectButton />
         </div>
 
@@ -128,7 +128,7 @@ export default function Home() {
               border: "1px solid rgba(255,120,120,.25)",
             }}
           >
-            Estás en otra red.{" "}
+            Estás en otra red.
             <button
               onClick={() => switchChain({ chainId: base.id })}
               style={{
