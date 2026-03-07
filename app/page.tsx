@@ -31,6 +31,33 @@ export default function Home() {
 
   return (
     <main
+      <div style={{marginTop:40}}>
+  <h2>Token oficial</h2>
+
+  <iframe
+    src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
+    width="100%"
+    height="420"
+    frameBorder="0"
+  />
+
+  <div style={{marginTop:20}}>
+    <a
+      href="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D"
+      target="_blank"
+      style={{
+        padding:"12px 20px",
+        background:"#3b82f6",
+        color:"white",
+        borderRadius:"10px",
+        textDecoration:"none",
+        fontWeight:"bold"
+      }}
+    >
+      Buy Token
+    </a>
+  </div>
+</div>
       style={{
         minHeight: "100vh",
         padding: "32px 20px",
