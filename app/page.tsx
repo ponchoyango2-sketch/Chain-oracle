@@ -13,7 +13,7 @@ export default function Home() {
       setLoading(true);
       setResult("Consultando el oráculo...");
       const q = crypto.trim();
-      const res = await fetch(`/api/predict?q=${encodeURIComponent(q)}`);
+      const res = await fetch(/api/predict?q=${encodeURIComponent(q)});
       const data = await res.json();
 
       if (!res.ok) {
@@ -30,8 +30,7 @@ export default function Home() {
   }
 
   return (
-    <main>
-     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+    <main
       style={{
         minHeight: "100vh",
         padding: "32px 20px",
@@ -43,45 +42,6 @@ export default function Home() {
       }}
     >
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-        return (
-  <main
-    style={{
-      minHeight: "100vh",
-      padding: "32px 20px",
-      background:
-        "radial-gradient(circle at top, rgba(30,120,80,0.35), transparent 30%), linear-gradient(180deg, #07110d 0%, #0b1410 45%, #050806 100%)",
-      color: "white",
-      fontFamily:
-        "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    }}
-  >
-      <div style={{ marginTop: 40 }}>
-        <h2>Token oficial</h2>
-
-        <iframe
-          src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
-          width="100%"
-          height="420"
-          frameBorder="0"
-        ></iframe>
-
-        <div style={{ marginTop: 20 }}>
-          <a
-            href="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D"
-            target="_blank"
-            style={{
-              padding: "12px 20px",
-              background: "#3b82f6",
-              color: "white",
-              borderRadius: "10px",
-              textDecoration: "none",
-              fontWeight: "bold",
-            }}
-          >
-            Buy Token
-          </a>
-        </div>
-      </div>
         <div
           style={{
             display: "flex",
@@ -108,7 +68,7 @@ export default function Home() {
                 marginBottom: 12,
               }}
             >
-             ☛ Live on Base
+              ☛ Live on Base
             </div>
 
             <h1
@@ -120,7 +80,7 @@ export default function Home() {
                 letterSpacing: -2,
               }}
             >
-             《 Chain Oracle 》
+              《 Chain Oracle 》
             </h1>
 
             <p
@@ -133,7 +93,7 @@ export default function Home() {
                 color: "rgba(255,255,255,0.78)",
               }}
             >
-             ☛ Predicciones exclusivas para holders que buscan ventaja real.
+              ☛ Predicciones exclusivas para holders que buscan ventaja real.
             </p>
           </div>
 
@@ -211,7 +171,8 @@ export default function Home() {
                 lineHeight: 1.6,
               }}
             >
-              Escribe un ticker como BTC, ETH, SOL o BASE y obtén una respuesta instantánea.
+              Escribe un ticker como BTC, ETH, SOL o BASE y obtén una respuesta
+              instantánea.
             </p>
 
             <div
@@ -382,58 +343,57 @@ export default function Home() {
                 lineHeight: 1.6,
               }}
             >
-             ☛ desarrollado por Alfonso Medina 🔍
-              <p
-  style={{
-    fontSize: 13,
-    opacity: 0.7,
-    marginTop: 18,
-    lineHeight: 1.6,
-  }}
->
-  Creado por Alfonso Medina
-</p>
+              ☛ desarrollado por Alfonso Medina 🔍
+            </p>
 
-{/* Token Chart */}
-
-<div
-  style={{
-    marginTop: 40,
-    width: "100%",
-    maxWidth: 1100,
-    marginLeft: "auto",
-    marginRight: "auto",
-  }}
->
-  <h2
-    style={{
-      fontSize: 28,
-      fontWeight: 800,
-      marginBottom: 16,
-      color: "white",
-      textAlign: "center",
-    }}
-  >
-    Token Chart
-  </h2>
-
-  <div
-    style={{
-      borderRadius: 20,
-      overflow: "hidden",
-      border: "1px solid rgba(255,255,255,0.1)",
-    }}
-  >
-    <iframe
-      src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
-      width="100%"
-      height="500"
-      style={{ border: "none" }}
-    />
-  </div>
-</div>
+            <p
+              style={{
+                fontSize: 13,
+                opacity: 0.7,
+                marginTop: 18,
+                lineHeight: 1.6,
+              }}
+            >
+              Creado por Alfonso Medina
             </p>
           </aside>
+        </div>
+
+        <div
+          style={{
+            marginTop: 40,
+            width: "100%",
+            maxWidth: 1100,
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: 28,
+              fontWeight: 800,
+              marginBottom: 16,
+              color: "white",
+              textAlign: "center",
+            }}
+          >
+            Token Chart
+          </h2>
+
+          <div
+            style={{
+              borderRadius: 20,
+              overflow: "hidden",
+              border: "1px solid rgba(255,255,255,0.1)",
+            }}
+          >
+            <iframe
+              src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
+              width="100%"
+              height="500"
+              style={{ border: "none" }}
+            />
+          </div>
         </div>
       </div>
     </main>
