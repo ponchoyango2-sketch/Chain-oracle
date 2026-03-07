@@ -13,7 +13,7 @@ export default function Home() {
       setLoading(true);
       setResult("Consultando el oráculo...");
       const q = crypto.trim();
-      const res = await fetch(/api/predict?q=${encodeURIComponent(q)});
+      const res = await fetch(`/api/predict?q=${encodeURIComponent(q)}`);
       const data = await res.json();
 
       if (!res.ok) {
