@@ -68,7 +68,7 @@ export default function Home() {
                 marginBottom: 12,
               }}
             >
-              Live on Base
+             ☛ Live on Base
             </div>
 
             <h1
@@ -80,7 +80,7 @@ export default function Home() {
                 letterSpacing: -2,
               }}
             >
-              Chain Oracle
+             《 Chain Oracle 》
             </h1>
 
             <p
@@ -93,7 +93,7 @@ export default function Home() {
                 color: "rgba(255,255,255,0.78)",
               }}
             >
-              Predicciones Web3 con una fachada premium.
+             ☛ Predicciones exclusivas para holders que buscan ventaja real.
             </p>
           </div>
 
@@ -342,7 +342,7 @@ export default function Home() {
                 lineHeight: 1.6,
               }}
             >
-              Creado por Alfonso Medina
+             ☛ desarrollado por Alfonso Medina 🔍
             </p>
           </aside>
         </div>
