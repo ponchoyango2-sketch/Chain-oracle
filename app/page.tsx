@@ -30,7 +30,7 @@ export default function Home() {
   }
 
   return (
-    <main
+    <main>
       <div style={{marginTop:40}}>
   <h2>Token oficial</h2>
 
