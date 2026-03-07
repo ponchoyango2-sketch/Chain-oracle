@@ -31,33 +31,7 @@ export default function Home() {
 
   return (
     <main>
-      <div style={{marginTop:40}}>
-  <h2>Token oficial</h2>
-
-  <iframe
-    src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
-    width="100%"
-    height="420"
-    frameBorder="0"
-  />
-
-  <div style={{marginTop:20}}>
-    <a
-      href="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D"
-      target="_blank"
-      style={{
-        padding:"12px 20px",
-        background:"#3b82f6",
-        color:"white",
-        borderRadius:"10px",
-        textDecoration:"none",
-        fontWeight:"bold"
-      }}
-    >
-      Buy Token
-    </a>
-  </div>
-</div>
+     
       style={{
         minHeight: "100vh",
         padding: "32px 20px",
@@ -69,6 +43,47 @@ export default function Home() {
       }}
     >
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        return (
+  <main
+    style={{
+      minHeight: "100vh",
+      padding: "32px 20px",
+      background:
+        "radial-gradient(circle at top, rgba(30,120,80,0.35), transparent 30%), linear-gradient(180deg, #07110d 0%, #0b1410 45%, #050806 100%)",
+      color: "white",
+      fontFamily:
+        "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+    }}
+  >
+    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+      <div style={{ marginTop: 40 }}>
+        <h2>Token oficial</h2>
+
+        <iframe
+          src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
+          width="100%"
+          height="420"
+          frameBorder="0"
+        ></iframe>
+
+        <div style={{ marginTop: 20 }}>
+          <a
+            href="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D"
+            target="_blank"
+            style={{
+              padding: "12px 20px",
+              background: "#3b82f6",
+              color: "white",
+              borderRadius: "10px",
+              textDecoration: "none",
+              fontWeight: "bold",
+            }}
+          >
+            Buy Token
+          </a>
+        </div>
+      </div>
         <div
           style={{
             display: "flex",
