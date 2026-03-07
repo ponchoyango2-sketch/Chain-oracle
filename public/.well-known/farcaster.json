@@ -1,0 +1,18 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "frame": {
+    "version": "1",
+    "name": "Chain Oracle",
+    "iconUrl": "https://chain-oracle.vercel.app/icon.png",
+    "homeUrl": "https://chain-oracle.vercel.app",
+    "imageUrl": "https://chain-oracle.vercel.app/icon.png",
+    "buttonTitle": "Open Chain Oracle",
+    "description": "Predicciones exclusivas para holders que buscan ventaja real.",
+    "splashImageUrl": "https://chain-oracle.vercel.app/icon.png",
+    "splashBackgroundColor": "#07110d"
+  }
+}
