@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { sdk } from "@farcaster/miniapp-sdk";
 
 export default function Home() {
   const [crypto, setCrypto] = useState("ETH");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const initMiniApp = async () => {
+      try {
+        await sdk.actions.ready();
+      } catch (error) {
+        console.error("Mini App SDK no disponible:", error);
+      }
+    };
+
+    initMiniApp();
+  }, []);
 
   async function doPredict() {
     try {
