@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <main>
-     
+     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
       style={{
         minHeight: "100vh",
         padding: "32px 20px",
@@ -55,8 +55,6 @@ export default function Home() {
         "Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
     }}
   >
-    <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-
       <div style={{ marginTop: 40 }}>
         <h2>Token oficial</h2>
 
