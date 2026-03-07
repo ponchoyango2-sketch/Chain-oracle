@@ -343,6 +343,55 @@ export default function Home() {
               }}
             >
              ☛ desarrollado por Alfonso Medina 🔍
+              <p
+  style={{
+    fontSize: 13,
+    opacity: 0.7,
+    marginTop: 18,
+    lineHeight: 1.6,
+  }}
+>
+  Creado por Alfonso Medina
+</p>
+
+{/* Token Chart */}
+
+<div
+  style={{
+    marginTop: 40,
+    width: "100%",
+    maxWidth: 1100,
+    marginLeft: "auto",
+    marginRight: "auto",
+  }}
+>
+  <h2
+    style={{
+      fontSize: 28,
+      fontWeight: 800,
+      marginBottom: 16,
+      color: "white",
+      textAlign: "center",
+    }}
+  >
+    Token Chart
+  </h2>
+
+  <div
+    style={{
+      borderRadius: 20,
+      overflow: "hidden",
+      border: "1px solid rgba(255,255,255,0.1)",
+    }}
+  >
+    <iframe
+      src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
+      width="100%"
+      height="600"
+      style={{ border: "none" }}
+    />
+  </div>
+</div>
             </p>
           </aside>
         </div>
