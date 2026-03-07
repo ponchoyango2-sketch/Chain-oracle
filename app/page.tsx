@@ -105,7 +105,7 @@ export default function Home() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.2fr 0.8fr",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
             gap: 22,
           }}
         >
@@ -387,7 +387,7 @@ export default function Home() {
     <iframe
       src="https://dexscreener.com/base/0xEBb08e5b88789BE6FE2d16C14826e1ef82F0139D?embed=1&theme=dark"
       width="100%"
-      height="600"
+      height="500"
       style={{ border: "none" }}
     />
   </div>
