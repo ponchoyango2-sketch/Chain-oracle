@@ -657,7 +657,7 @@ export default function Home() {
                         <MiniTag
                           text={
                             typeof item.confidence === "number"
-                              ? ${item.confidence}%
+                              ? item.confidence + "%"
                               : "--"
                           }
                         />
