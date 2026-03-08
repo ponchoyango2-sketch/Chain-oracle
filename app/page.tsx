@@ -518,24 +518,24 @@ try {
                 }}
               />
 
-              <button
-                onClick={doPredict}
-                disabled={loading}
-                style={{
-                  padding: "16px 22px",
-                  borderRadius: 16,
-                  border: "1px solid rgba(80,255,170,0.35)",
-                  background: "linear-gradient(180deg, #27d17f, #159a5d)",
-                  color: "white",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading ? 0.8 : 1,
-                  fontWeight: 800,
-                  fontSize: 16,
-                  boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
-                }}
-              >
-                {loading ? "Consultando..." : "🔮 Predecir"}
-              </button>
+             <button
+  onClick={doPredict}
+  disabled={loading || freeBlocked}
+  style={{
+    padding: "16px 22px",
+    borderRadius: 16,
+    border: "1px solid rgba(80,255,170,0.35)",
+    background: "linear-gradient(180deg, #27d17f, #159a5d)",
+    color: "white",
+    cursor: loading || freeBlocked ? "not-allowed" : "pointer",
+    opacity: loading || freeBlocked ? 0.8 : 1,
+    fontWeight: 800,
+    fontSize: 16,
+    boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
+  }}
+>
+  {loading ? "Consultando..." : freeBlocked ? "Límite alcanzado" : "🔮 Predecir"}
+</button>
             </div>
             <div
   style={{
