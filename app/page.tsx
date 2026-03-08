@@ -1257,7 +1257,6 @@ try {
       Purchase COLLECTIVEX directly on Base using ETH or USDC.
     </p>
   </div>
-      </div>
     </main>
   );
 }
