@@ -1114,8 +1114,6 @@ try {
   Balance CLX: {clxBalance.toFixed(2)}
   
 </div>
- 
-    </div>
 
     <div
       style={{
