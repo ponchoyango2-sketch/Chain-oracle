@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { sdk } from "@farcaster/miniapp-sdk";
+import { useAccount } from "wagmi";
 
 type PredictionResponse = {
   ok: boolean;
@@ -21,7 +22,10 @@ type PredictionResponse = {
 
 const QUICK_TICKERS = ["BTC", "ETH", "SOL", "BASE"];
 
-export default function Home() {
+  export default function Home(const { address, isConnected } = useAccount();
+  const [freeUsed, setFreeUsed] = useState(0);) {
+  const FREE_LIMIT = 3;
+  const FREE_STORAGE_KEY = "chain_oracle_free_predictions_used";
   const [crypto, setCrypto] = useState("ETH");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<PredictionResponse | null>(null);
@@ -29,6 +33,14 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+  try {
+    const saved = window.localStorage.getItem(FREE_STORAGE_KEY);
+    const used = saved ? Number(saved) : 0;
+    setFreeUsed(Number.isFinite(used) ? used : 0);
+  } catch (error) {
+    console.error("No se pudo leer freeUsed:", error);
+  }
+}, []);
     const initMiniApp = async () => {
       try {
         await sdk.actions.ready();
