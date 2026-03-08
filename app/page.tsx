@@ -21,8 +21,49 @@ type PredictionResponse = {
 };
 
 const QUICK_TICKERS = ["BTC", "ETH", "SOL", "BASE"];
+type WheelRewardType = "clx" | "prediction" | "badge" | "boost";
+
+type WheelPrize = {
+  id: string;
+  label: string;
+  weight: number;
+  rewardType: WheelRewardType;
+  amount?: number;
+  color: string;
+};
+
+const SPIN_COST_CLX = 100;
+
+const WHEEL_PRIZES: WheelPrize[] = [
+  { id: "p1", label: "40 CLX", weight: 550, rewardType: "clx", amount: 40, color: "#4ade80" },
+  { id: "p2", label: "60 CLX", weight: 200, rewardType: "clx", amount: 60, color: "#22c55e" },
+  { id: "p3", label: "3 Predicciones", weight: 120, rewardType: "prediction", amount: 3, color: "#60a5fa" },
+  { id: "p4", label: "100 CLX", weight: 80, rewardType: "clx", amount: 100, color: "#facc15" },
+  { id: "p5", label: "Boost Oracle", weight: 40, rewardType: "boost", amount: 1, color: "#a78bfa" },
+  { id: "p6", label: "Badge Legendario", weight: 10, rewardType: "badge", amount: 1, color: "#f472b6" },
+];
+
+function pickWeightedPrize(items: WheelPrize[]) {
+  const total = items.reduce((sum, item) => sum + item.weight, 0);
+  let roll = Math.random() * total;
+
+  for (const item of items) {
+    roll -= item.weight;
+    if (roll <= 0) return item;
+  }
+
+  return items[items.length - 1];
+}
 
 export default function Home() {
+  
+  const [spinning, setSpinning] = useState(false);
+  const [wheelRotation, setWheelRotation] = useState(0);
+  const [wheelResult, setWheelResult] = useState<WheelPrize | null>(null);
+  const [extraPredictions, setExtraPredictions] = useState(0);
+  const [boostCount, setBoostCount] = useState(0);
+  const [badges, setBadges] = useState<string[]>([]);
+  const [clxRewardsWon, setClxRewardsWon] = useState(0);
   const { address, isConnected } = useAccount();
   const [freeUsed, setFreeUsed] = useState(0);
   const FREE_LIMIT = 3;
@@ -55,8 +96,9 @@ useEffect(() => {
   initMiniApp();
 }, []);
 
-  const freeRemaining = Math.max(FREE_LIMIT - freeUsed, 0);
-const freeBlocked = freeUsed >= FREE_LIMIT;
+  const totalAvailablePredictions = FREE_LIMIT + extraPredictions;
+const freeRemaining = Math.max(totalAvailablePredictions - freeUsed, 0);
+const freeBlocked = freeUsed >= totalAvailablePredictions;
 
 const signalStyle = useMemo(() => {
   switch (result?.signal) {
@@ -162,6 +204,51 @@ try {
       setLoading(false);
     }
   }
+  function spinWheel() {
+  if (spinning) return;
+
+  if (!isConnected) {
+    setErrorMessage("Conecta tu wallet para jugar la ruleta con CLX.");
+    return;
+  }
+
+  setErrorMessage("");
+  setSpinning(true);
+
+  const prize = pickWeightedPrize(WHEEL_PRIZES);
+
+  const fullSpins = 5;
+  const segmentAngle = 360 / WHEEL_PRIZES.length;
+  const prizeIndex = WHEEL_PRIZES.findIndex((item) => item.id === prize.id);
+  const targetAngle = 360 - prizeIndex * segmentAngle - segmentAngle / 2;
+  const newRotation = wheelRotation + fullSpins * 360 + targetAngle;
+
+  setWheelRotation(newRotation);
+
+  window.setTimeout(() => {
+    setWheelResult(prize);
+
+    if (prize.rewardType === "prediction" && prize.amount) {
+      setExtraPredictions((prev) => prev + prize.amount);
+    }
+
+    if (prize.rewardType === "boost" && prize.amount) {
+      setBoostCount((prev) => prev + prize.amount);
+    }
+
+    if (prize.rewardType === "badge") {
+      setBadges((prev) =>
+        prev.includes(prize.label) ? prev : [...prev, prize.label]
+      );
+    }
+
+    if (prize.rewardType === "clx" && prize.amount) {
+      setClxRewardsWon((prev) => prev + prize.amount);
+    }
+
+    setSpinning(false);
+  }, 3200);
+}
 
   return (
     <main
@@ -834,6 +921,251 @@ try {
     }}
   >
     Buy COLLECTIVEX (CLX)
+    <div
+  style={{
+    marginTop: 40,
+    width: "100%",
+    maxWidth: 1100,
+    marginLeft: "auto",
+    marginRight: "auto",
+  }}
+>
+  <h2
+    style={{
+      fontSize: 28,
+      fontWeight: 800,
+      marginBottom: 16,
+      color: "white",
+      textAlign: "center",
+    }}
+  >
+    CLX Reward Wheel
+  </h2>
+
+  <div
+    style={{
+      borderRadius: 20,
+      border: "1px solid rgba(255,255,255,0.1)",
+      padding: 24,
+      background: "rgba(255,255,255,0.03)",
+    }}
+  >
+    <p
+      style={{
+        textAlign: "center",
+        color: "rgba(255,255,255,0.8)",
+        marginTop: 0,
+        marginBottom: 20,
+        fontWeight: 700,
+      }}
+    >
+      Cada giro cuesta {SPIN_COST_CLX} CLX. Premios públicos, utilidad real y diversión.
+    </p>
+
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: 20,
+      }}
+    >
+      <div style={{ position: "relative", width: 280, height: 280 }}>
+        <div
+          style={{
+            position: "absolute",
+            top: -10,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "14px solid transparent",
+            borderRight: "14px solid transparent",
+            borderTop: "24px solid #ffffff",
+            zIndex: 2,
+          }}
+        />
+
+        <div
+          style={{
+            width: 280,
+            height: 280,
+            borderRadius: "50%",
+            border: "8px solid rgba(255,255,255,0.12)",
+            position: "relative",
+            overflow: "hidden",
+            transform: rotate(${wheelRotation}deg),
+            transition: spinning
+              ? "transform 3.2s cubic-bezier(0.18, 0.89, 0.32, 1.28)"
+              : "transform 0.4s ease",
+            background:
+              "conic-gradient(#4ade80 0deg 60deg, #22c55e 60deg 120deg, #60a5fa 120deg 180deg, #facc15 180deg 240deg, #a78bfa 240deg 300deg, #f472b6 300deg 360deg)",
+            boxShadow: "0 20px 50px rgba(0,0,0,0.35)",
+          }}
+        >
+          {WHEEL_PRIZES.map((prize, index) => {
+            const angle = index * (360 / WHEEL_PRIZES.length) + 30;
+            return (
+              <div
+                key={prize.id}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: translate(-50%, -50%) rotate(${angle}deg) translateY(-98px),
+                  transformOrigin: "center center",
+                  color: "white",
+                  fontWeight: 800,
+                  fontSize: 12,
+                  textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+                  textAlign: "center",
+                  width: 100,
+                }}
+              >
+                {prize.label}
+              </div>
+            );
+          })}
+
+          <div
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: 74,
+              height: 74,
+              borderRadius: "50%",
+              background: "#08110d",
+              border: "3px solid rgba(255,255,255,0.18)",
+              transform: "translate(-50%, -50%)",
+              zIndex: 2,
+            }}
+          />
+        </div>
+      </div>
+    </div>
+
+    <div style={{ textAlign: "center" }}>
+      <button
+        onClick={spinWheel}
+        disabled={spinning || !isConnected}
+        style={{
+          padding: "16px 28px",
+          borderRadius: 16,
+          background: "linear-gradient(180deg, #27d17f, #159a5d)",
+          color: "white",
+          fontWeight: 800,
+          fontSize: 18,
+          border: "1px solid rgba(80,255,170,0.35)",
+          cursor: spinning || !isConnected ? "not-allowed" : "pointer",
+          opacity: spinning || !isConnected ? 0.7 : 1,
+          boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
+        }}
+      >
+        {spinning ? "Girando..." : Spin for ${SPIN_COST_CLX} CLX}
+      </button>
+    </div>
+
+    <div
+      style={{
+        marginTop: 22,
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        gap: 12,
+      }}
+    >
+      <div
+        style={{
+          padding: 14,
+          borderRadius: 16,
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <div style={{ opacity: 0.7, fontSize: 13 }}>CLX ganado</div>
+        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800 }}>
+          {clxRewardsWon} CLX
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: 14,
+          borderRadius: 16,
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <div style={{ opacity: 0.7, fontSize: 13 }}>Predicciones extra</div>
+        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800 }}>
+          {extraPredictions}
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: 14,
+          borderRadius: 16,
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <div style={{ opacity: 0.7, fontSize: 13 }}>Boosts</div>
+        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800 }}>
+          {boostCount}
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: 14,
+          borderRadius: 16,
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+        }}
+      >
+        <div style={{ opacity: 0.7, fontSize: 13 }}>Badges</div>
+        <div style={{ marginTop: 6, fontSize: 20, fontWeight: 800 }}>
+          {badges.length}
+        </div>
+      </div>
+    </div>
+
+    {wheelResult ? (
+      <div
+        style={{
+          marginTop: 18,
+          padding: 16,
+          borderRadius: 16,
+          background: "rgba(255,255,255,0.04)",
+          border: "1px solid rgba(255,255,255,0.08)",
+          textAlign: "center",
+          color: "white",
+          fontWeight: 700,
+          lineHeight: 1.6,
+        }}
+      >
+        Premio obtenido: {wheelResult.label}
+      </div>
+    ) : null}
+
+    <div
+      style={{
+        marginTop: 18,
+        padding: 16,
+        borderRadius: 16,
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        color: "rgba(255,255,255,0.72)",
+        fontSize: 14,
+        lineHeight: 1.7,
+      }}
+    >
+      <strong style={{ color: "white" }}>Probabilidades públicas:</strong>{" "}
+      40 CLX (55%), 60 CLX (20%), 3 predicciones (12%), 100 CLX (8%), Boost
+      Oracle (4%), Badge Legendario (1%).
+    </div>
+  </div>
+</div>
   </h2>
 
   <div
