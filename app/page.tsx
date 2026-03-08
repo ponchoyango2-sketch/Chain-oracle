@@ -1099,8 +1099,8 @@ try {
   {spinning
     ? "Girando..."
     : canSpin
-    ? Spin for ${SPIN_COST_CLX} CLX
-    : Necesitas ${SPIN_COST_CLX} CLX}
+    ? `Spin for ${SPIN_COST_CLX} CLX`
+    : `Necesitas ${SPIN_COST_CLX} CLX`}
 </button>
         <div
   style={{
