@@ -1255,17 +1255,19 @@ try {
 
     <p style={{ marginTop: 16, opacity: 0.7 }}>
       Purchase COLLECTIVEX directly on Base using ETH or USDC.
-    </p>
-  </div>
-    </main>
-    );
-
-    function MetricCard({
-      label,
-      value,
+     </p>
+   </div>
+ </div>
+</div>
+</main>
+  );
+}
+function MetricCard({
+  label,
+  value,
 }: {
-      label: string;
-      value: string;
+  label: string;
+  value: string;
 }) {
   return (
     <div
