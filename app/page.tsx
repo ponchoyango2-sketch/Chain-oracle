@@ -604,7 +604,7 @@ export default function Home() {
                 <div style={{ display: "grid", gap: 12 }}>
                   {history.map((item, index) => (
                     <div
-                      key={${item.asset}-${item.timestamp}-${index}}
+                      key={`${item.asset}-${item.timestamp}-${index}`}
                       style={{
                         padding: 14,
                         borderRadius: 16,
