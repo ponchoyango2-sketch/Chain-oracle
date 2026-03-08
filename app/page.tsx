@@ -1,13 +1,33 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { sdk } from "@farcaster/miniapp-sdk";
 
+type PredictionResponse = {
+  ok: boolean;
+  asset?: string;
+  prediction?: string;
+  summary?: string;
+  signal?: "bullish" | "bearish" | "neutral" | "mystical";
+  signalLabel?: string;
+  confidence?: number;
+  horizon?: "short" | "medium" | "long";
+  horizonLabel?: string;
+  warning?: string;
+  timestamp?: string;
+  error?: string;
+};
+
+const QUICK_TICKERS = ["BTC", "ETH", "SOL", "BASE"];
+
 export default function Home() {
   const [crypto, setCrypto] = useState("ETH");
-  const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<PredictionResponse | null>(null);
+  const [history, setHistory] = useState<PredictionResponse[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     const initMiniApp = async () => {
       try {
@@ -20,22 +40,92 @@ export default function Home() {
     initMiniApp();
   }, []);
 
+  const signalStyle = useMemo(() => {
+    switch (result?.signal) {
+      case "bullish":
+        return {
+          label: "Bullish",
+          bg: "rgba(39, 209, 127, 0.14)",
+          border: "1px solid rgba(39, 209, 127, 0.35)",
+          color: "#8affc1",
+        };
+      case "bearish":
+        return {
+          label: "Bearish",
+          bg: "rgba(255, 92, 92, 0.14)",
+          border: "1px solid rgba(255, 92, 92, 0.35)",
+          color: "#ff9b9b",
+        };
+      case "neutral":
+        return {
+          label: "Neutral",
+          bg: "rgba(255, 255, 255, 0.08)",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
+          color: "#dcdcdc",
+        };
+      case "mystical":
+        return {
+          label: "Oracle",
+          bg: "rgba(168, 85, 247, 0.16)",
+          border: "1px solid rgba(168, 85, 247, 0.35)",
+          color: "#d7b4ff",
+        };
+      default:
+        return {
+          label: "Signal",
+          bg: "rgba(255, 255, 255, 0.08)",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
+          color: "#dcdcdc",
+        };
+    }
+  }, [result?.signal]);
+
+  function formatTime(iso?: string) {
+    if (!iso) return "Sin hora";
+    try {
+      return new Date(iso).toLocaleString();
+    } catch {
+      return iso;
+    }
+  }
+
   async function doPredict() {
+    const q = crypto.trim().toUpperCase();
+
+    if (!q) {
+      setErrorMessage("Escribe un ticker válido.");
+      setResult(null);
+      return;
+    }
+
     try {
       setLoading(true);
-      setResult("Consultando el oráculo...");
-      const q = crypto.trim();
-      const res = await fetch(`/api/predict?q=${encodeURIComponent(q)}`);
-      const data = await res.json();
+      setErrorMessage("");
+      setResult({
+        ok: true,
+        asset: q,
+        prediction: "Consultando el oráculo...",
+        summary: "El sistema está procesando la lectura de mercado.",
+      });
 
-      if (!res.ok) {
-        setResult(data?.error || "Error al consultar");
+      const res = await fetch(/api/predict?q=${encodeURIComponent(q)}, {
+        cache: "no-store",
+      });
+
+      const data: PredictionResponse = await res.json();
+
+      if (!res.ok || !data?.ok) {
+        const message = data?.error || "Error al consultar el oráculo.";
+        setErrorMessage(message);
+        setResult(null);
         return;
       }
 
-      setResult(data?.prediction || "Sin respuesta");
+      setResult(data);
+      setHistory((prev) => [data, ...prev].slice(0, 5));
     } catch (e: any) {
-      setResult(e?.message || "Error");
+      setErrorMessage(e?.message || "Error inesperado.");
+      setResult(null);
     } finally {
       setLoading(false);
     }
@@ -99,13 +189,14 @@ export default function Home() {
               style={{
                 marginTop: 14,
                 marginBottom: 0,
-                maxWidth: 650,
+                maxWidth: 680,
                 fontSize: 18,
                 lineHeight: 1.5,
                 color: "rgba(255,255,255,0.78)",
               }}
             >
-              ☛ Predicciones exclusivas para holders que buscan ventaja real.
+              ☛ Predicciones exclusivas con lectura de mercado, señal, confianza
+              y horizonte operativo.
             </p>
           </div>
 
@@ -183,8 +274,8 @@ export default function Home() {
                 lineHeight: 1.6,
               }}
             >
-              Escribe un ticker como BTC, ETH, SOL o BASE y obtén una respuesta
-              instantánea.
+              Escribe un ticker como BTC, ETH, SOL, BASE o cualquier otro token
+              y recibe una lectura instantánea.
             </p>
 
             <div
@@ -194,7 +285,7 @@ export default function Home() {
                 flexWrap: "wrap",
               }}
             >
-              {["BTC", "ETH", "SOL", "BASE"].map((item) => (
+              {QUICK_TICKERS.map((item) => (
                 <button
                   key={item}
                   onClick={() => setCrypto(item)}
@@ -229,7 +320,7 @@ export default function Home() {
             >
               <input
                 value={crypto}
-                onChange={(e) => setCrypto(e.target.value)}
+                onChange={(e) => setCrypto(e.target.value.toUpperCase())}
                 placeholder="BTC / ETH / SOL / BASE"
                 style={{
                   flex: 1,
@@ -253,7 +344,8 @@ export default function Home() {
                   border: "1px solid rgba(80,255,170,0.35)",
                   background: "linear-gradient(180deg, #27d17f, #159a5d)",
                   color: "white",
-                  cursor: "pointer",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.8 : 1,
                   fontWeight: 800,
                   fontSize: 16,
                   boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
@@ -263,111 +355,319 @@ export default function Home() {
               </button>
             </div>
 
+            {errorMessage ? (
+              <div
+                style={{
+                  marginTop: 18,
+                  padding: 16,
+                  borderRadius: 16,
+                  border: "1px solid rgba(255,92,92,0.25)",
+                  background: "rgba(255,92,92,0.10)",
+                  color: "#ffb3b3",
+                  lineHeight: 1.5,
+                }}
+              >
+                {errorMessage}
+              </div>
+            ) : null}
+
             <div
               style={{
                 marginTop: 18,
-                padding: 18,
-                borderRadius: 18,
+                padding: 20,
+                borderRadius: 20,
                 border: "1px solid rgba(255,255,255,0.10)",
                 background: "rgba(255,255,255,0.04)",
-                minHeight: 90,
-                color: "rgba(255,255,255,0.9)",
-                lineHeight: 1.6,
+                minHeight: 220,
+                color: "rgba(255,255,255,0.95)",
               }}
             >
-              {result || "Aquí aparecerá la respuesta del oráculo."}
+              {result ? (
+                <div style={{ display: "grid", gap: 16 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 12,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          opacity: 0.7,
+                          textTransform: "uppercase",
+                          letterSpacing: 1,
+                        }}
+                      >
+                        Activo consultado
+                      </div>
+                      <div
+                        style={{
+                          marginTop: 4,
+                          fontSize: 28,
+                          fontWeight: 900,
+                          letterSpacing: 1,
+                        }}
+                      >
+                        {result.asset || crypto}
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        padding: "8px 12px",
+                        borderRadius: 999,
+                        background: signalStyle.bg,
+                        border: signalStyle.border,
+                        color: signalStyle.color,
+                        fontWeight: 800,
+                        fontSize: 13,
+                        letterSpacing: 0.5,
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      {result.signalLabel || signalStyle.label}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: 18,
+                      lineHeight: 1.7,
+                      color: "rgba(255,255,255,0.95)",
+                    }}
+                  >
+                    {result.prediction || "Aquí aparecerá la respuesta del oráculo."}
+                  </div>
+
+                  {result.summary ? (
+                    <div
+                      style={{
+                        padding: 14,
+                        borderRadius: 14,
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        color: "rgba(255,255,255,0.78)",
+                        lineHeight: 1.6,
+                        fontSize: 14,
+                      }}
+                    >
+                      {result.summary}
+                    </div>
+                  ) : null}
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fit, minmax(140px, 1fr))",
+                      gap: 12,
+                    }}
+                  >
+                    <MetricCard
+                      label="Confianza"
+                      value={
+                        typeof result.confidence === "number"
+                          ? ${result.confidence}%
+                          : "--"
+                      }
+                    />
+                    <MetricCard
+                      label="Horizonte"
+                      value={result.horizonLabel || "--"}
+                    />
+                    <MetricCard
+                      label="Hora"
+                      value={formatTime(result.timestamp)}
+                    />
+                  </div>
+
+                  {result.warning ? (
+                    <div
+                      style={{
+                        padding: 14,
+                        borderRadius: 14,
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        background: "rgba(255,255,255,0.03)",
+                        color: "rgba(255,255,255,0.72)",
+                        fontSize: 14,
+                        lineHeight: 1.6,
+                      }}
+                    >
+                      <strong style={{ color: "white" }}>Advertencia:</strong>{" "}
+                      {result.warning}
+                    </div>
+                  ) : null}
+                </div>
+              ) : (
+                <div
+                  style={{
+                    color: "rgba(255,255,255,0.72)",
+                    lineHeight: 1.7,
+                    fontSize: 16,
+                  }}
+                >
+                  Aquí aparecerá la lectura del oráculo con su señal, confianza,
+                  horizonte y advertencia operativa.
+                </div>
+              )}
             </div>
           </section>
 
           <aside
             style={{
-              borderRadius: 28,
-              border: "1px solid rgba(255,255,255,0.10)",
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))",
-              boxShadow: "0 25px 80px rgba(0,0,0,0.35)",
-              backdropFilter: "blur(14px)",
-              padding: 26,
+              display: "grid",
+              gap: 22,
             }}
           >
             <div
               style={{
-                fontSize: 12,
-                color: "#9bffd0",
-                textTransform: "uppercase",
-                letterSpacing: 1,
-                fontWeight: 700,
-                marginBottom: 16,
+                borderRadius: 28,
+                border: "1px solid rgba(255,255,255,0.10)",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))",
+                boxShadow: "0 25px 80px rgba(0,0,0,0.35)",
+                backdropFilter: "blur(14px)",
+                padding: 26,
               }}
             >
-              Estado del proyecto
+              <div
+                style={{
+                  fontSize: 12,
+                  color: "#9bffd0",
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  fontWeight: 700,
+                  marginBottom: 16,
+                }}
+              >
+                Estado del proyecto
+              </div>
+
+              <div style={{ display: "grid", gap: 14 }}>
+                <MetricCard label="Red" value="Base" />
+                <MetricCard label="Estado" value="En línea" />
+                <MetricCard label="Acceso" value="Premium" />
+              </div>
+
+              <p
+                style={{
+                  fontSize: 13,
+                  opacity: 0.7,
+                  marginTop: 18,
+                  lineHeight: 1.6,
+                }}
+              >
+                ☛ desarrollado por Alfonso Medina
+              </p>
             </div>
 
-            <div style={{ display: "grid", gap: 14 }}>
+            <div
+              style={{
+                borderRadius: 28,
+                border: "1px solid rgba(255,255,255,0.10)",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03))",
+                boxShadow: "0 25px 80px rgba(0,0,0,0.35)",
+                backdropFilter: "blur(14px)",
+                padding: 26,
+              }}
+            >
               <div
                 style={{
-                  padding: 16,
-                  borderRadius: 18,
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
+                  fontSize: 12,
+                  color: "#9bffd0",
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                  fontWeight: 700,
+                  marginBottom: 16,
                 }}
               >
-                <div style={{ opacity: 0.7, fontSize: 13 }}>Red</div>
-                <div style={{ marginTop: 6, fontSize: 22, fontWeight: 800 }}>
-                  Base
-                </div>
+                Historial reciente
               </div>
 
-              <div
-                style={{
-                  padding: 16,
-                  borderRadius: 18,
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}
-              >
-                <div style={{ opacity: 0.7, fontSize: 13 }}>Estado</div>
-                <div style={{ marginTop: 6, fontSize: 22, fontWeight: 800 }}>
-                  En línea
+              {history.length === 0 ? (
+                <div
+                  style={{
+                    color: "rgba(255,255,255,0.70)",
+                    lineHeight: 1.6,
+                    fontSize: 14,
+                  }}
+                >
+                  Aún no hay consultas guardadas. Haz una predicción para ver el
+                  historial.
                 </div>
-              </div>
+              ) : (
+                <div style={{ display: "grid", gap: 12 }}>
+                  {history.map((item, index) => (
+                    <div
+                      key={${item.asset}-${item.timestamp}-${index}}
+                      style={{
+                        padding: 14,
+                        borderRadius: 16,
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          gap: 12,
+                          alignItems: "center",
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <strong style={{ fontSize: 16 }}>
+                          {item.asset || "TOKEN"}
+                        </strong>
+                        <span
+                          style={{
+                            fontSize: 12,
+                            opacity: 0.65,
+                          }}
+                        >
+                          {formatTime(item.timestamp)}
+                        </span>
+                      </div>
 
-              <div
-                style={{
-                  padding: 16,
-                  borderRadius: 18,
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                }}
-              >
-                <div style={{ opacity: 0.7, fontSize: 13 }}>Acceso</div>
-                <div style={{ marginTop: 6, fontSize: 22, fontWeight: 800 }}>
-                  Premium
+                      <div
+                        style={{
+                          marginTop: 8,
+                          color: "rgba(255,255,255,0.82)",
+                          lineHeight: 1.5,
+                          fontSize: 14,
+                        }}
+                      >
+                        {item.prediction}
+                      </div>
+
+                      <div
+                        style={{
+                          marginTop: 10,
+                          display: "flex",
+                          gap: 8,
+                          flexWrap: "wrap",
+                        }}
+                      >
+                        <MiniTag text={item.signalLabel || "Signal"} />
+                        <MiniTag
+                          text={
+                            typeof item.confidence === "number"
+                              ? ${item.confidence}%
+                              : "--"
+                          }
+                        />
+                        <MiniTag text={item.horizonLabel || "--"} />
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
-
-            <p
-              style={{
-                fontSize: 13,
-                opacity: 0.7,
-                marginTop: 18,
-                lineHeight: 1.6,
-              }}
-            >
-              ☛ desarrollado por Alfonso Medina 🔍
-            </p>
-
-            <p
-              style={{
-                fontSize: 13,
-                opacity: 0.7,
-                marginTop: 18,
-                lineHeight: 1.6,
-              }}
-            >
-              Creado por Alfonso Medina
-            </p>
           </aside>
         </div>
 
@@ -409,5 +709,54 @@ export default function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+function MetricCard({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div
+      style={{
+        padding: 16,
+        borderRadius: 18,
+        background: "rgba(255,255,255,0.04)",
+        border: "1px solid rgba(255,255,255,0.08)",
+      }}
+    >
+      <div style={{ opacity: 0.7, fontSize: 13 }}>{label}</div>
+      <div
+        style={{
+          marginTop: 6,
+          fontSize: 20,
+          fontWeight: 800,
+          lineHeight: 1.2,
+          wordBreak: "break-word",
+        }}
+      >
+        {value}
+      </div>
+    </div>
+  );
+}
+
+function MiniTag({ text }: { text: string }) {
+  return (
+    <span
+      style={{
+        padding: "6px 10px",
+        borderRadius: 999,
+        background: "rgba(255,255,255,0.06)",
+        border: "1px solid rgba(255,255,255,0.10)",
+        fontSize: 12,
+        color: "rgba(255,255,255,0.86)",
+      }}
+    >
+      {text}
+    </span>
   );
 }
