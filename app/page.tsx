@@ -1011,7 +1011,7 @@ try {
                   position: "absolute",
                   top: "50%",
                   left: "50%",
-                  transform: translate(-50%, -50%) rotate(${angle}deg) translateY(-98px),
+                  transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-98px)`,
                   transformOrigin: "center center",
                   color: "white",
                   fontWeight: 800,
