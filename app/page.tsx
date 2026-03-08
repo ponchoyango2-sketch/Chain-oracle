@@ -1061,7 +1061,7 @@ try {
           boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
         }}
       >
-        {spinning ? "Girando..." : Spin for ${SPIN_COST_CLX} CLX}
+        {spinning ? "Girando..." : `Spin for ${SPIN_COST_CLX} CLX`}
       </button>
     </div>
 
