@@ -22,8 +22,9 @@ type PredictionResponse = {
 
 const QUICK_TICKERS = ["BTC", "ETH", "SOL", "BASE"];
 
-  export default function Home(const { address, isConnected } = useAccount();
-  const [freeUsed, setFreeUsed] = useState(0);) {
+export default function Home() {
+  const { address, isConnected } = useAccount();
+  const [freeUsed, setFreeUsed] = useState(0);
   const FREE_LIMIT = 3;
   const FREE_STORAGE_KEY = "chain_oracle_free_predictions_used";
   const [crypto, setCrypto] = useState("ETH");
@@ -55,6 +56,8 @@ const QUICK_TICKERS = ["BTC", "ETH", "SOL", "BASE"];
   const signalStyle = useMemo(() => {
     switch (result?.signal) {
       case "bullish":
+        const freeRemaining = Math.max(FREE_LIMIT - freeUsed, 0);
+        const freeBlocked = freeUsed >= FREE_LIMIT;
         return {
           label: "Bullish",
           bg: "rgba(39, 209, 127, 0.14)",
