@@ -242,9 +242,10 @@ try {
       );
     }
 
-    if (prize.rewardType === "clx" && prize.amount) {
-      setClxRewardsWon((prev) => prev + prize.amount);
-    }
+    if (prize.rewardType === "clx") {
+  setClxRewardsWon((prev) => prev + (prize.amount ?? 0));
+}
+    
 
     setSpinning(false);
   }, 3200);
