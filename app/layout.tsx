@@ -1,7 +1,23 @@
 import "./globals.css";
 import Providers from "./providers";
+import type { Metadata } from "next";
 
-export const metadata = {
+const miniAppEmbed = {
+  version: "1",
+  imageUrl: "https://chain-oracle.vercel.app/preview.png",
+  button: {
+    title: "Open App",
+    action: {
+      type: "launch_frame",
+      name: "Chain Oracle",
+      url: "https://chain-oracle.vercel.app",
+      splashImageUrl: "https://chain-oracle.vercel.app/preview.png",
+      splashBackgroundColor: "#ffffff",
+    },
+  },
+};
+
+export const metadata: Metadata = {
   metadataBase: new URL("https://chain-oracle.vercel.app"),
   title: "Chain Oracle",
   description: "Prediction powered by blockchain",
@@ -26,6 +42,10 @@ export const metadata = {
     title: "Chain Oracle",
     description: "Prediction powered by blockchain",
     images: ["/preview.png"],
+  },
+  other: {
+    "fc:miniapp": JSON.stringify(miniAppEmbed),
+    "fc:frame": JSON.stringify(miniAppEmbed),
   },
 };
 
