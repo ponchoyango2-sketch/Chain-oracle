@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { sdk } from "@farcaster/miniapp-sdk";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 
 type PredictionResponse = {
   ok: boolean;
@@ -19,6 +19,9 @@ type PredictionResponse = {
   timestamp?: string;
   error?: string;
 };
+
+const CLX_TOKEN_ADDRESS = "0xebb08e5b88789be6fe2d16c14826e1ef82f0139d";
+const CLX_DECIMALS = 18; 
 
 const QUICK_TICKERS = ["BTC", "ETH", "SOL", "BASE"];
 type WheelRewardType = "clx" | "prediction" | "badge" | "boost";
@@ -65,6 +68,16 @@ export default function Home() {
   const [badges, setBadges] = useState<string[]>([]);
   const [clxRewardsWon, setClxRewardsWon] = useState(0);
   const { address, isConnected } = useAccount();
+  const { data: clxBalanceData } = useBalance({
+  address,
+  token: CLX_TOKEN_ADDRESS as `0x${string}`,
+});
+
+  const clxBalance = clxBalanceData
+  ? Number(formatUnits(clxBalanceData.value, CLX_DECIMALS))
+  : 0;
+
+  const canSpin = isConnected && clxBalance >= SPIN_COST_CLX;
   const [freeUsed, setFreeUsed] = useState(0);
   const FREE_LIMIT = 3;
   const FREE_STORAGE_KEY = "chain_oracle_free_predictions_used";
@@ -209,6 +222,11 @@ try {
 
   if (!isConnected) {
     setErrorMessage("Conecta tu wallet para jugar la ruleta con CLX.");
+    return;
+  }
+
+  if (!canSpin) {
+    setErrorMessage(Necesitas al menos ${SPIN_COST_CLX} CLX para girar.);
     return;
   }
 
@@ -1062,8 +1080,39 @@ try {
           boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
         }}
       >
-        {spinning ? "Girando..." : `Spin for ${SPIN_COST_CLX} CLX`}
-      </button>
+        <button
+  onClick={spinWheel}
+  disabled={spinning || !canSpin}
+  style={{
+    padding: "16px 28px",
+    borderRadius: 16,
+    background: "linear-gradient(180deg, #27d17f, #159a5d)",
+    color: "white",
+    fontWeight: 800,
+    fontSize: 18,
+    border: "1px solid rgba(80,255,170,0.35)",
+    cursor: spinning || !canSpin ? "not-allowed" : "pointer",
+    opacity: spinning || !canSpin ? 0.7 : 1,
+    boxShadow: "0 12px 30px rgba(39,209,127,0.25)",
+  }}
+>
+  {spinning
+    ? "Girando..."
+    : canSpin
+    ? Spin for ${SPIN_COST_CLX} CLX
+    : Necesitas ${SPIN_COST_CLX} CLX}
+</button>
+        <div
+  style={{
+    marginTop: 12,
+    textAlign: "center",
+    color: "rgba(255,255,255,0.78)",
+    fontSize: 14,
+    fontWeight: 700,
+  }}
+>
+  Balance CLX: {clxBalance.toFixed(2)}
+</div>
     </div>
 
     <div
