@@ -3,17 +3,44 @@
 import "@rainbow-me/rainbowkit/styles.css";
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { WagmiProvider, http } from "wagmi";
+import { createConfig, http, WagmiProvider } from "wagmi";
 import { base } from "wagmi/chains";
 import {
   RainbowKitProvider,
-  getDefaultConfig,
+  connectorsForWallets,
 } from "@rainbow-me/rainbowkit";
+import {
+  metaMaskWallet,
+  rainbowWallet,
+  walletConnectWallet,
+  injectedWallet,
+  coinbaseWallet,
+} from "@rainbow-me/rainbowkit/wallets";
 
-const config = getDefaultConfig({
-  appName: "Chain Oracle",
-  projectId: "c72acb0517b84dde28476773e31de1da",
+const projectId = "c72acb0517b84dde28476773e31de1da";
+
+const connectors = connectorsForWallets(
+  [
+    {
+      groupName: "Recommended",
+      wallets: [
+        coinbaseWallet,
+        metaMaskWallet,
+        rainbowWallet,
+        walletConnectWallet,
+        injectedWallet,
+      ],
+    },
+  ],
+  {
+    appName: "Chain Oracle",
+    projectId,
+  }
+);
+
+const config = createConfig({
   chains: [base],
+  connectors,
   transports: {
     [base.id]: http(),
   },
