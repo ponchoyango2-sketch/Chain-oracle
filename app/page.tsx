@@ -108,7 +108,7 @@ export default function Home() {
         summary: "El sistema está procesando la lectura de mercado.",
       });
 
-      const res = await fetch(/api/predict?q=${encodeURIComponent(q)}, {
+      const res = await fetch(`/api/predict?q=${encodeURIComponent(q)}`, {
         cache: "no-store",
       });
 
