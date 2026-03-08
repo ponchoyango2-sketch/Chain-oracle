@@ -1111,8 +1111,9 @@ try {
     fontWeight: 700,
   }}
 >
-  Balance CLX: {clxBalance.toFixed(2)}
+  
 </div>
+ Balance CLX: {clxBalance.toFixed(2)}
     </div>
 
     <div
