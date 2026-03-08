@@ -1274,7 +1274,6 @@ try {
 </p>
       </div>
     </div>
-  </div>
 </main>
   );
 }
