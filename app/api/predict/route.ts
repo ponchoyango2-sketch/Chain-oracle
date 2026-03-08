@@ -237,11 +237,11 @@ function pickRandom<T>(arr: T[]): T {
 
 function buildOracleFlavor(asset: string): string[] {
   return [
-    La cadena observa a ${asset} con atención.,
-    Los flujos de ${asset} todavía esconden intención.,
-    ${asset} entra en una zona donde la paciencia vale más que la prisa.,
-    El pulso de ${asset} sugiere que el mercado aún no decide todo.,
-    ${asset} podría sorprender si la narrativa se fortalece.
+    `La cadena observa a ${asset} con atención.`,
+    `Los flujos de ${asset} todavía esconden intención.`,
+    `${asset} entra en una zona donde la paciencia vale más que la prisa.`,
+    `El pulso de ${asset} sugiere que el mercado aún no decide todo.`,
+    `${asset} podría sorprender si la narrativa se fortalece.`
   ];
 }
 
