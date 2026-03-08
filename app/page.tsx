@@ -993,7 +993,7 @@ try {
             border: "8px solid rgba(255,255,255,0.12)",
             position: "relative",
             overflow: "hidden",
-            transform: rotate(${wheelRotation}deg),
+            transform: `rotate(${wheelRotation}deg)`,
             transition: spinning
               ? "transform 3.2s cubic-bezier(0.18, 0.89, 0.32, 1.28)"
               : "transform 0.4s ease",
