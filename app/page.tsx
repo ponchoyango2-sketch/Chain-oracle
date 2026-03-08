@@ -226,7 +226,7 @@ try {
   }
 
   if (!canSpin) {
-    setErrorMessage(Necesitas al menos ${SPIN_COST_CLX} CLX para girar.);
+    setErrorMessage(`Necesitas al menos ${SPIN_COST_CLX} CLX para girar.`);
     return;
   }
 
