@@ -233,7 +233,7 @@ try {
     }
 
     if (prize.rewardType === "boost" && prize.amount) {
-      setBoostCount((prev) => prev + prize.amount);
+      setBoostCount((prev) => prev + (prize.amount ?? 0));
     }
 
     if (prize.rewardType === "badge") {
