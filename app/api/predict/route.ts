@@ -241,7 +241,7 @@ function buildOracleFlavor(asset: string): string[] {
     Los flujos de ${asset} todavía esconden intención.,
     ${asset} entra en una zona donde la paciencia vale más que la prisa.,
     El pulso de ${asset} sugiere que el mercado aún no decide todo.,
-    ${asset} podría sorprender si la narrativa se fortalece.,
+    ${asset} podría sorprender si la narrativa se fortalece.
   ];
 }
 
