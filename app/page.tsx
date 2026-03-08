@@ -229,7 +229,7 @@ try {
     setWheelResult(prize);
 
     if (prize.rewardType === "prediction" && prize.amount) {
-      setExtraPredictions((prev) => prev + prize.amount);
+      setExtraPredictions((prev) => prev + (prize.amount ?? 0));
     }
 
     if (prize.rewardType === "boost" && prize.amount) {
