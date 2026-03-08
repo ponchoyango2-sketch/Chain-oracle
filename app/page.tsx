@@ -1258,15 +1258,14 @@ try {
     </p>
   </div>
     </main>
-      );
-    }
+    );
 
-function MetricCard({
-  label,
-  value,
+    function MetricCard({
+      label,
+      value,
 }: {
-  label: string;
-  value: string;
+      label: string;
+      value: string;
 }) {
   return (
     <div
