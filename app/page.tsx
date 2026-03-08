@@ -201,7 +201,71 @@ export default function Home() {
           </div>
 
           <div style={{ display: "flex", alignItems: "center" }}>
-            <ConnectButton />
+            <ConnectButton.Custom>
+  {({
+    account,
+    chain,
+    openAccountModal,
+    openChainModal,
+    openConnectModal,
+    mounted,
+    authenticationStatus,
+  }) => {
+    const ready = mounted && authenticationStatus !== "loading";
+    const connected =
+      ready &&
+      account &&
+      chain &&
+      (!authenticationStatus || authenticationStatus === "authenticated");
+
+    return (
+      <div
+        {...(!ready && {
+          "aria-hidden": true,
+          style: {
+            opacity: 0,
+            pointerEvents: "none",
+            userSelect: "none",
+          },
+        })}
+      >
+        {!connected ? (
+          <button
+            type="button"
+            onClick={() => {
+              console.log("openConnectModal fired");
+              openConnectModal?.();
+            }}
+            style={{
+              padding: "12px 16px",
+              borderRadius: 14,
+              border: "1px solid rgba(80,255,170,0.35)",
+              background: "linear-gradient(180deg, #27d17f, #159a5d)",
+              color: "white",
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            Connect Wallet
+          </button>
+        ) : chain.unsupported ? (
+          <button type="button" onClick={openChainModal}>
+            Wrong network
+          </button>
+        ) : (
+          <div style={{ display: "flex", gap: 12 }}>
+            <button type="button" onClick={openChainModal}>
+              {chain.name}
+            </button>
+            <button type="button" onClick={openAccountModal}>
+              {account.displayName}
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }}
+</ConnectButton.Custom>
           </div>
         </div>
 
