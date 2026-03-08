@@ -32,8 +32,8 @@ export default function Home() {
   const [result, setResult] = useState<PredictionResponse | null>(null);
   const [history, setHistory] = useState<PredictionResponse[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
+  
+useEffect(() => {
   try {
     const saved = window.localStorage.getItem(FREE_STORAGE_KEY);
     const used = saved ? Number(saved) : 0;
@@ -42,24 +42,27 @@ export default function Home() {
     console.error("No se pudo leer freeUsed:", error);
   }
 }, []);
-    const initMiniApp = async () => {
-      try {
-        await sdk.actions.ready();
-      } catch (error) {
-        console.error("Mini App SDK no disponible:", error);
-      }
-    };
 
-    initMiniApp();
-  }, []);
+useEffect(() => {
+  const initMiniApp = async () => {
+    try {
+      await sdk.actions.ready();
+    } catch (error) {
+      console.error("Mini App SDK no disponible:", error);
+    }
+  };
 
-  const signalStyle = useMemo(() => {
-    switch (result?.signal) {
-      case "bullish":
-        const freeRemaining = Math.max(FREE_LIMIT - freeUsed, 0);
-        const freeBlocked = freeUsed >= FREE_LIMIT;
-        return {
-          label: "Bullish",
+  initMiniApp();
+}, []);
+
+  const freeRemaining = Math.max(FREE_LIMIT - freeUsed, 0);
+const freeBlocked = freeUsed >= FREE_LIMIT;
+
+const signalStyle = useMemo(() => {
+  switch (result?.signal) {
+    case "bullish":
+      return {
+        label: "Bullish",
           bg: "rgba(39, 209, 127, 0.14)",
           border: "1px solid rgba(39, 209, 127, 0.35)",
           color: "#8affc1",
