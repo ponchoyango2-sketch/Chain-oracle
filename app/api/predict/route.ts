@@ -267,7 +267,7 @@ function buildSummary(asset: string, entry: PredictionEntry, confidence: number)
   const signalText = SIGNAL_LABELS[entry.signal];
   const horizonText = HORIZON_LABELS[entry.horizon];
 
-  return ${asset}: ${entry.text} Señal ${signalText} con confianza estimada de ${confidence}% para ${horizonText.toLowerCase()}.;
+  return `${asset}: ${entry.text} Señal ${signalText} con confianza estimada de ${confidence}% para ${horizonText.toLowerCase()}.`;
 }
 
 function buildWarning(signal: Signal): string {
