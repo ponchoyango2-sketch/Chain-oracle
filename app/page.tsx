@@ -1275,7 +1275,6 @@ try {
       
 </main>
 );
-}
 
 function MetricCard({
   label,
