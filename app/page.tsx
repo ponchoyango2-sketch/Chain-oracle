@@ -471,7 +471,7 @@ export default function Home() {
                       label="Confianza"
                       value={
                         typeof result.confidence === "number"
-                          ? ${result.confidence}%
+                          ? result.confidence + "%"
                           : "--"
                       }
                     />
