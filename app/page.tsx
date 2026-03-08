@@ -105,6 +105,12 @@ export default function Home() {
   }
 
   async function doPredict() {
+    if (freeBlocked) {
+  setErrorMessage(
+    "Ya usaste tus 3 predicciones gratis. Compra CLX para desbloquear más consultas."
+  );
+  return;
+}
     const q = crypto.trim().toUpperCase();
 
     if (!q) {
@@ -138,6 +144,14 @@ export default function Home() {
 
       setResult(data);
       setHistory((prev) => [data, ...prev].slice(0, 5));
+      const nextUsed = freeUsed + 1;
+setFreeUsed(nextUsed);
+
+try {
+  window.localStorage.setItem(FREE_STORAGE_KEY, String(nextUsed));
+} catch (error) {
+  console.error("No se pudo guardar freeUsed:", error);
+}
     } catch (e: any) {
       setErrorMessage(e?.message || "Error inesperado.");
       setResult(null);
@@ -433,6 +447,18 @@ export default function Home() {
                 {loading ? "Consultando..." : "🔮 Predecir"}
               </button>
             </div>
+            <div
+  style={{
+    marginTop: 12,
+    fontSize: 14,
+    color: freeBlocked ? "#ffb3b3" : "rgba(255,255,255,0.75)",
+    fontWeight: 700,
+  }}
+>
+  {freeBlocked
+    ? "Tus 3 predicciones gratis ya fueron usadas."
+    : Predicciones gratis restantes: ${freeRemaining} / ${FREE_LIMIT}}
+</div>
 
             {errorMessage ? (
               <div
@@ -831,6 +857,17 @@ export default function Home() {
         display: "inline-block",
       }}
     >
+      <p
+  style={{
+    marginTop: 0,
+    marginBottom: 16,
+    textAlign: "center",
+    color: "rgba(255,255,255,0.82)",
+    fontWeight: 700,
+  }}
+>
+  3 predicciones gratis. Después, compra CLX para desbloquear más.
+</p>
       Buy CLX
     </a>
 
