@@ -1239,7 +1239,7 @@ try {
         display: "inline-block",
       }}
     >
-      <p
+<p
   style={{
     marginTop: 0,
     marginBottom: 16,
@@ -1250,12 +1250,28 @@ try {
 >
   3 predicciones gratis. Después, compra CLX para desbloquear más.
 </p>
-      Buy CLX
-    </a>
 
-    <p style={{ marginTop: 16, opacity: 0.7 }}>
-        Purchase COLLECTIVEX directly on Base using ETH or USDC.
-      </p>
+<a
+  href="https://app.uniswap.org/#/swap?outputCurrency=0xebb08e5b88789be6fe2d16c14826e1ef82f0139d&chain=base"
+  target="_blank"
+  rel="noopener noreferrer"
+  style={{
+    padding: "16px 28px",
+    borderRadius: 16,
+    background: "linear-gradient(180deg, #27d17f, #159a5d)",
+    color: "white",
+    fontWeight: 800,
+    fontSize: 18,
+    textDecoration: "none",
+    display: "inline-block",
+  }}
+>
+  Buy CLX
+</a>
+
+<p style={{ marginTop: 16, opacity: 0.7 }}>
+  Purchase COLLECTIVEX directly on Base using ETH or USDC.
+</p>
       </div>
     </div>
   </div>
