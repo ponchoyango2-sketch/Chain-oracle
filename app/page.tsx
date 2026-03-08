@@ -1214,7 +1214,6 @@ try {
       40 CLX (55%), 60 CLX (20%), 3 predicciones (12%), 100 CLX (8%), Boost
       Oracle (4%), Badge Legendario (1%).
     </div>
-</div>
   </h2>
 
   <div
