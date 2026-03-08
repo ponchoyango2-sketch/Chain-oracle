@@ -460,7 +460,7 @@ try {
 >
   {freeBlocked
     ? "Tus 3 predicciones gratis ya fueron usadas."
-    : Predicciones gratis restantes: ${freeRemaining} / ${FREE_LIMIT}}
+    : `Predicciones gratis restantes: ${freeRemaining} / ${FREE_LIMIT}`}
 </div>
 
             {errorMessage ? (
