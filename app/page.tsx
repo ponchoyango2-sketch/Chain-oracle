@@ -58,7 +58,7 @@ function pickWeightedPrize(items: WheelPrize[]) {
   return items[items.length - 1];
 }
 
-export default function Home() {
+
   export default function Home() {
   return (
     <main style={{ padding: 40 }}>
