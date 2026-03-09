@@ -60,8 +60,7 @@ function pickWeightedPrize(items: WheelPrize[]) {
 
 
   export default function Home() {
-  return (
- const [spinning, setSpinning] = useState(false);
+  const [spinning, setSpinning] = useState(false);
   const [wheelRotation, setWheelRotation] = useState(0);
   const [wheelResult, setWheelResult] = useState<WheelPrize | null>(null);
   const [extraPredictions, setExtraPredictions] = useState(0);
@@ -94,6 +93,7 @@ useEffect(() => {
     setFreeUsed(Number.isFinite(used) ? used : 0);
   } catch (error) {
     console.error("No se pudo leer freeUsed:", error);
+    
   }
 }, []);
 
