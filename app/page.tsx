@@ -1274,8 +1274,8 @@ try {
 </p>
 
 </main>
-);
-}   // ← ESTA LLAVE FALTABA
+  );
+}   
 
 function MetricCard({
   label,
