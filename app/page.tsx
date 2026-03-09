@@ -59,33 +59,13 @@ function pickWeightedPrize(items: WheelPrize[]) {
 }
 
 export default function Home() {
-  
-  const [spinning, setSpinning] = useState(false);
-  const [wheelRotation, setWheelRotation] = useState(0);
-  const [wheelResult, setWheelResult] = useState<WheelPrize | null>(null);
-  const [extraPredictions, setExtraPredictions] = useState(0);
-  const [boostCount, setBoostCount] = useState(0);
-  const [badges, setBadges] = useState<string[]>([]);
-  const [clxRewardsWon, setClxRewardsWon] = useState(0);
-  const { address, isConnected } = useAccount();
-  const { data: clxBalanceData } = useBalance({
-  address,
-  token: CLX_TOKEN_ADDRESS as `0x${string}`,
-});
-
-  const clxBalance = clxBalanceData
-  ? Number(formatUnits(clxBalanceData.value, CLX_DECIMALS))
-  : 0;
-
-  const canSpin = isConnected && clxBalance >= SPIN_COST_CLX;
-  const [freeUsed, setFreeUsed] = useState(0);
-  const FREE_LIMIT = 3;
-  const FREE_STORAGE_KEY = "chain_oracle_free_predictions_used";
-  const [crypto, setCrypto] = useState("ETH");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<PredictionResponse | null>(null);
-  const [history, setHistory] = useState<PredictionResponse[]>([]);
-  const [errorMessage, setErrorMessage] = useState("");
+  export default function Home() {
+  return (
+    <main style={{ padding: 40 }}>
+      <h1>CLX App Running</h1>
+    </main>
+  );
+}
   
 useEffect(() => {
   try {
