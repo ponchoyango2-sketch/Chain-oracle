@@ -1295,9 +1295,9 @@ try {
             textDecoration: "none",
             display: "inline-block",
           }}
-        >
+          >
           Buy CLX
-        </a>
+          </a>
 
         <p style={{ marginTop: 16, opacity: 0.7 }}>
           Purchase COLLECTIVEX directly on Base using ETH or USDC.
