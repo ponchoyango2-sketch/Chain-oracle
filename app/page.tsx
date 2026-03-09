@@ -1247,7 +1247,7 @@ try {
     marginLeft: "auto",
     marginRight: "auto",
   }}
->
+>  
   <h2
         style={{
           fontSize: 30,
