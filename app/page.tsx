@@ -1272,9 +1272,10 @@ try {
 <p style={{ marginTop: 16, opacity: 0.7 }}>
   Purchase COLLECTIVEX directly on Base using ETH or USDC.
 </p>
-      
+
 </main>
 );
+}   // ← ESTA LLAVE FALTABA
 
 function MetricCard({
   label,
