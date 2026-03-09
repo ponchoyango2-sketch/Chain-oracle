@@ -70,7 +70,7 @@ function pickWeightedPrize(items: WheelPrize[]) {
   const { address, isConnected } = useAccount();
   const { data: clxBalanceData } = useBalance({
   address,
-  token: CLX_TOKEN_ADDRESS as 0x${string},
+  token: CLX_TOKEN_ADDRESS as `0x${string}`,
 });
 
   const clxBalance = clxBalanceData
