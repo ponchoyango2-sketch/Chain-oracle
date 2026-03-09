@@ -1249,111 +1249,60 @@ try {
   }}
 >
   <h2
-    style={{
-      fontSize: 28,
-      fontWeight: 800,
-      marginBottom: 16,
-      color: "white",
-      textAlign: "center",
-    }}
-  >
-    Buy COLLECTIVEX (CLX)
-  </h2>
-
-  <div
-    style={{
-      borderRadius: 20,
-      overflow: "hidden",
-      border: "1px solid rgba(255,255,255,0.1)",
-      padding: 20,
-      background: "rgba(255,255,255,0.03)",
-      textAlign: "center",
-    }}
-  >
-    <p
-      style={{
-        marginTop: 0,
-        marginBottom: 16,
-        textAlign: "center",
-        color: "rgba(255,255,255,0.82)",
-        fontWeight: 700,
-      }}
-    >
-      3 predicciones gratis. Después, compra CLX para desbloquear más.
-    </p>
-
-    <a
-      href="https://app.uniswap.org/#/swap?outputCurrency=0xebb08e5b88789be6fe2d16c14826e1ef82f0139d&chain=base"
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        padding: "16px 28px",
-        borderRadius: 16,
-        background: "linear-gradient(180deg, #27d17f, #159a5d)",
-        color: "white",
-        fontWeight: 800,
-        fontSize: 18,
-        textDecoration: "none",
-        display: "inline-block",
-      }}
-    >
-      Buy CLX
-    </a>
-
-    <p style={{ marginTop: 16, opacity: 0.7 }}>
-        Purchase COLLECTIVEX directly on Base using ETH or USDC.
-      </p>
-    </div>
-  </div>
-</main>
-);
-}
-
-function MetricCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div
-      style={{
-        padding: 16,
-        borderRadius: 18,
-        background: "rgba(255,255,255,0.04)",
-        border: "1px solid rgba(255,255,255,0.08)",
-      }}
-    >
-      <div style={{ opacity: 0.7, fontSize: 13 }}>{label}</div>
-      <div
         style={{
-          marginTop: 6,
-          fontSize: 20,
-          fontWeight: 800,
-          lineHeight: 1.2,
-          wordBreak: "break-word",
+          fontSize: 30,
+          marginBottom: 18,
+          fontWeight: 900,
+          textAlign: "center",
         }}
       >
-        {value}
+        Buy COLLECTIVEX (CLX)
+      </h2>
+
+      <div
+        style={{
+          borderRadius: 20,
+          overflow: "hidden",
+          border: "1px solid rgba(255,255,255,0.1)",
+          padding: 20,
+          background: "rgba(255,255,255,0.03)",
+          textAlign: "center",
+        }}
+      >
+        <p
+          style={{
+            marginTop: 0,
+            marginBottom: 16,
+            textAlign: "center",
+            color: "rgba(255,255,255,0.82)",
+            fontWeight: 700,
+          }}
+        >
+          3 predicciones gratis. Después, compra CLX para desbloquear más.
+        </p>
+
+        <a
+          href="https://app.uniswap.org/#/swap?outputCurrency=0xebb08e5b88789be6fe2d16c14826e1ef82f0139d&chain=base"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            padding: "16px 28px",
+            borderRadius: 16,
+            background: "linear-gradient(180deg, #27d17f, #159a5d)",
+            color: "white",
+            fontWeight: 800,
+            fontSize: 18,
+            textDecoration: "none",
+            display: "inline-block",
+          }}
+        >
+          Buy CLX
+        </a>
+
+        <p style={{ marginTop: 16, opacity: 0.7 }}>
+          Purchase COLLECTIVEX directly on Base using ETH or USDC.
+        </p>
       </div>
     </div>
-  );
-}
-
-function MiniTag({ text }: { text: string }) {
-  return (
-    <span
-      style={{
-        padding: "6px 10px",
-        borderRadius: 999,
-        background: "rgba(255,255,255,0.06)",
-        border: "1px solid rgba(255,255,255,0.10)",
-        fontSize: 12,
-        color: "rgba(255,255,255,0.86)",
-      }}
-    >
-      {text}
-    </span>
-  );
-}
+  </main>
+);
