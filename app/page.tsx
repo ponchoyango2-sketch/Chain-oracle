@@ -1286,16 +1286,15 @@ try {
     target="_blank"
     rel="noopener noreferrer"
     style={{
-      padding: "16px 28px",
-      borderRadius: 16,
-      background: "linear-gradient(180deg, #27d17f, #159a5d)",
-      color: "white",
-      fontWeight: 800,
-      fontSize: 18,
-      textDecoration: "none",
-      display: "inline-block"
-    }}
-  >
+  padding: "16px 28px",
+  borderRadius: 16,
+  background: "linear-gradient(180deg, #27d17f, #159a5d)",
+  color: "white",
+  fontWeight: 800,
+  fontSize: 18,
+  textDecoration: "none",
+  display: "inline-block"
+}}>
     Buy CLX
   </a>
 
